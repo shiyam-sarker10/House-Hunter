@@ -3,11 +3,21 @@ import { Link, NavLink } from "react-router-dom";
 import Button from "../Shared/Button";
 import logo from '../../assets/logo2.png'
 import "./Nav.css"
-
+import useAuth from "../../hooks/useAuth";
+import { toast } from "react-toastify";
 
 const Nav = () => {
-  const navList = ["Home", "Search House", "all user"];
+  const { user, setLocalStorageChange } = useAuth();
+  const navList = user
+    ? ["Home", "Search House", "All Users", "Dashboard"]
+    : ["Home", "Search House", "All Users"];
   const [isOpen, setIsOpen] = useState(false);
+  const handleLogout = () => {
+    localStorage.removeItem("Current User");
+    toast.success("Successfully Logged out in");
+    setLocalStorageChange((prevState) => !prevState);
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center bg-[#ECF2F9] max-w-[13]: mx-auto  shadow-md px-4 md:px-8 lg:px-12 py-6 z-50">
@@ -123,9 +133,15 @@ const Nav = () => {
         </div>
         {/* register  */}
         <div>
-          <Link to="/register">
-            <Button title="Register"></Button>
-          </Link>
+          {user ? (
+            <div onClick={handleLogout}>
+              <Button title="Logout"></Button>
+            </div>
+          ) : (
+            <Link to="/login">
+              <Button title="Login"></Button>
+            </Link>
+          )}
         </div>
       </div>
     </div>

@@ -1,7 +1,12 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
+import { toast } from "react-toastify";
 
 const Register = () => {
+  const axiosPublic = useAxiosPublic();
+  const [selectedOption, setSelectedOption] = useState("");
+  const homeNavigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -9,10 +14,45 @@ const Register = () => {
     const email = e.target.email.value
     const number = e.target.number.value
     const password = e.target.password.value 
-    const info = {name,email,number,password}
+    const role = selectedOption
+    const info = {name,email,role,number,password}
     console.log(info)
+    const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters long");
+      return;
+    } else if (!/[A-Z]/.test(password)) {
+      toast.error("Password must contain 1 capital letter ");
+      return;
+    } else if (!specialChars.test(password)) {
+      toast.error("Password must contain 1 spacial  character ");
+      return;
+    } else if (!number.startsWith("880")) {
+      toast.error("Provide a Bangladeshi Number");
+    } else if (!(number.length === 13)) {
+      toast.error("Invalid Number");
+    } else {
+      axiosPublic
+        .post("/register", info)
+        .then(() =>{ 
+          
+          const CurrentInfo = JSON.stringify({ name, role, number, email });
+          localStorage.setItem("Current User", CurrentInfo);
+          toast.success("Successfully logged in")
+          homeNavigate("/")
+      })
+        .catch(() =>
+          toast.error("Email already in use. Please use a different one.")
+        );
+
+    }
+    
 
   }
+  const handleSelectChange = (e) => {
+    setSelectedOption(e.target.value);
+  };
+
   return (
     <div className="bg-[#ECF2F9] h-screen flex justify-center items-center p-6 md:p-0">
       <div className="flex h-full md:h-[90%] lg:h-[80%] w-full md:w-[80%] lg:w-[60%] rounded-xl overflow-hidden shadow-md">
@@ -43,16 +83,25 @@ const Register = () => {
               type="text"
               placeholder="Full name"
               name="name"
+              required
             />
             <select
-              className="border border-[#8EA7E9] w-[80%] md:w-[60%] py-2 px-6 rounded appearance-auto bg-white text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#8EA7E9]/50"
+              value={selectedOption}
+              onChange={handleSelectChange}
+              className="border border-[#8EA7E9] w-[80%] md:w-[60%] py-2 px-6 rounded appearance-auto bg-white  focus:outline-none focus:ring-2 focus:ring-[#8EA7E9]/50"
               name="cars"
               id="cars"
+              required
             >
-              <option className="py-2 rounded">Choose a role</option>
-              <option className="py-2 rounded">Saab</option>
-              <option className="py-2 rounded">Mercedes</option>
-              <option className="py-2 rounded">Audi</option>
+              <option className="py-2 rounded text-gray-400" value="">
+                Choose a role
+              </option>
+              <option className="py-2 rounded text-gray-400" value="House Owner">
+                House Owner
+              </option>
+              <option className="py-2 rounded text-gray-400" value="House Renter">
+                House Renter
+              </option>
             </select>
 
             <input
@@ -60,6 +109,7 @@ const Register = () => {
               type="tel"
               placeholder="Phone number"
               name="number"
+              required
             />
             <input
               className="border border-[#8EA7E9] w-[80%] md:w-[60%] py-2 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8EA7E9]/50"
