@@ -9,8 +9,8 @@ import { toast } from "react-toastify";
 const Nav = () => {
   const { user, setLocalStorageChange } = useAuth();
   const navList = user
-    ? ["Home", "Search House", "All Users", "Dashboard"]
-    : ["Home", "Search House", "All Users"];
+    ? ["Home", "All Users","Dashboard"]
+    : ["Home", "All Users"];
   const [isOpen, setIsOpen] = useState(false);
   const handleLogout = () => {
     localStorage.removeItem("Current User");

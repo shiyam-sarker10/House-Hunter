@@ -24,7 +24,6 @@ const AuthProvider = ({children}) => {
             setUser(undefined);
           }
         };
-
         return () => {
           return observeLocalServer();
         };

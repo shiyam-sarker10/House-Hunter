@@ -15,16 +15,23 @@ const Login = () => {
     const password = e.target.password.value;
     axiosPublic
       .get(`/registeredUsers?email=${email}&password=${password}`)
+
       .then((result) => {
         if (result.data.email === email) {
+
           const { name, email, role, number } = result.data;
+
           const CurrentInfo = JSON.stringify({ name, role, number, email });
+
           localStorage.setItem("Current User", CurrentInfo);
           toast.success("Successfully logged in");
-          homeNavigate("/");
+          homeNavigate("/dashboard");
           setLocalStorageChange((prevState) => !prevState);
+
         } else if (result.data.error) {
+
           toast.error("Invalid Email");
+
         } else {
           toast.error("Invalid Email or  Password");
         }
