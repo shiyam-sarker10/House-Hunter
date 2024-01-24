@@ -1,7 +1,17 @@
-import  { useState } from 'react';
+import  { useEffect, useState } from 'react';
+import useAxiosPublic from '../../hooks/useAxiosPublic';
+import Card9 from '../Card/Card';
 
 
 const SearchCard = () => {
+    const [datas,setDatas] = useState([])
+    const axiosPublic = useAxiosPublic()
+    useEffect(()=>{ 
+        axiosPublic
+          .get("allHomes")
+          .then((result) => setDatas(result.data))
+          .catch((err) => console.log(err));
+    },[])
       const [selectedOption, setSelectedOption] = useState("");
      const handleSelectChange = (e) => {
        setSelectedOption(e.target.value);
@@ -34,12 +44,13 @@ const SearchCard = () => {
         };
 
         console.log(info)
+        axiosPublic.get(`/newHome`)
 
 
       }
     return (
-      <div className="flex ">
-        <div className=" w-[30%] sticky top-0 ">
+      <div className="flex flex-col md:flex-row ">
+        <div className="w-full md:w-[30%] sticky top-0 ">
           <form onSubmit={handleFilter} className="space-y-4">
             <input
               className="shadow-md w-[80%] md:w-[60%] py-2 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8EA7E9]/50"
@@ -112,7 +123,13 @@ const SearchCard = () => {
             />
           </form>
         </div>
-        <div className="bg-blue-500 w-[70%]">s</div>
+        <div className="w-full md:w-[70%]">
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-10'>
+            {datas?.map((data, idx) => (
+              <Card9 key={idx} data={data}></Card9>
+            ))}
+          </div>
+        </div>
       </div>
     );
 };

@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Link, useNavigate } from "react-router-dom";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import { toast } from "react-toastify";
@@ -78,7 +78,7 @@ const Login = () => {
               name="password"
             />
             <p className="text-[14px] text-gray-400">
-              Don't have an account ?{" "}
+              Do not have an account ?{" "}
               <Link to="/register" className="text-[#8EA7E9] ">
                 Create one
               </Link>

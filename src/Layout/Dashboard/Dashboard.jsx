@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 const Dashboard = () => {
 
-        const { user, setLocalStorageChange } = useAuth();
+    const { user, setLocalStorageChange } = useAuth();
     // Logout handler 
     const handleLogout = () => {
       localStorage.removeItem("Current User");
@@ -15,12 +15,16 @@ const Dashboard = () => {
 
     // responsive state 
     const  [isOpen,setIsOpen] = useState(false)
+    const localData = localStorage.getItem("Current User"); 
+    const data = JSON.parse(localData)
+    
+    
 
   return (
     <div className={`flex flex-col md:flex-row`}>
       <div
         className={`bg-[#8EA7E9] h-screen md:w-[280px]  md:sticky top-0  ${
-          isOpen ? "fixed  w-[280px] " : "w-full static h-max md:h-screen"
+          isOpen ? "fixed  w-[280px]" : "w-full static h-max md:h-screen"
         }  `}
       >
         <div className="block md:hidden z-50 relative p-4">
@@ -85,18 +89,27 @@ const Dashboard = () => {
             />
             <div className="text-center">
               <h1 className="text-2xl font-medium text-white/80">
-                {user?.name}
+                {data?.name}
               </h1>
-              <p className="text-gray-400 text-white/60">{user?.role}</p>
+              <p className="text-gray-400 text-white/60">{data?.role}</p>
             </div>
           </div>
           <div className="text-center flex flex-col gap-y-6">
-            <Link className="px-6 py-2 bg-white custom-border font-medium text-[#4a64ac] w-max mx-auto">
+            <Link
+              to="/dashboard"
+              className="px-6 py-2 bg-white custom-border font-medium text-[#4a64ac] w-max mx-auto"
+            >
               Dashboard
+            </Link>
+            <Link
+              to="/dashboard/add home"
+              className="px-6 py-2 bg-white custom-border font-medium text-[#4a64ac] w-max mx-auto"
+            >
+              Add Home
             </Link>
 
             <div>
-              {user ? (
+              {localStorage.getItem("Current User") ? (
                 <button
                   onClick={handleLogout}
                   className="px-6 py-2 bg-white custom-border font-medium text-[#4a64ac] w-max mx-auto"
@@ -114,51 +127,12 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-      <div className="w-full md:w-[calc(100%-280px)] bg-[#ECF2F9] p-10">
-        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-white uppercase bg-[#8EA7E9]">
-              <tr>
-                <th scope="col" className="px-6 py-3">
-                  Apartment Name
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Color
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Category
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Price
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Apple MacBook Pro 17"
-                </th>
-                <td className="px-6 py-4">Silver</td>
-                <td className="px-6 py-4">Laptop</td>
-                <td className="px-6 py-4">$2999</td>
-                <td className="px-6 py-4">
-                  <a
-                    href="#"
-                    className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                  >
-                    Edit
-                  </a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div
+        className={`${
+          isOpen ? "opacity-20" : "opacity-100"
+        } w-full md:w-[calc(100%-280px)] bg-[#ECF2F9] p-10 -z-10`}
+      >
+        <Outlet></Outlet>
       </div>
     </div>
   );

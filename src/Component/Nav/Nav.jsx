@@ -7,9 +7,9 @@ import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
 
 const Nav = () => {
-  const { user, setLocalStorageChange } = useAuth();
-  const navList = user
-    ? ["Home", "All Users","Dashboard"]
+  const {setLocalStorageChange } = useAuth();
+  const navList = localStorage.getItem("Current User")
+    ? ["Home", "All Users", "Dashboard"]
     : ["Home", "All Users"];
   const [isOpen, setIsOpen] = useState(false);
   const handleLogout = () => {
@@ -133,7 +133,7 @@ const Nav = () => {
         </div>
         {/* register  */}
         <div>
-          {user ? (
+          {localStorage.getItem("Current User")  ? (
             <div onClick={handleLogout}>
               <Button title="Logout"></Button>
             </div>
